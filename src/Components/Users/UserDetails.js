@@ -19,11 +19,6 @@ class UserDetails extends Component {
         </div>
 
         <div className='detail-card-row'>
-          <label htmlFor=''>Followers</label>
-          <input type='text' value={this.props.user.followers} disabled />
-        </div>
-
-        <div className='detail-card-row'>
           <label htmlFor=''>Location</label>
           <input type='text' value={this.props.user.location} disabled />
         </div>
