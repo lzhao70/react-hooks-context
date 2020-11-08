@@ -29,7 +29,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  title: 'Example',
+  title: 'Github Finder',
 };
 
 export default NavBar;
