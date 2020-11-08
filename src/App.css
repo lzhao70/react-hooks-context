@@ -192,6 +192,20 @@ input:focus {
   font-size: 0.9rem;
 }
 
+/* Not Found */
+.not-found-container {
+  width: 100%;
+  margin: 5% auto;
+}
+
+.not-found-container p {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-align: center;
+  letter-spacing: 0.1rem;
+}
+
 @media screen and (max-width: 900px) {
   .user-card-container {
     grid-template-columns: auto auto auto auto;
