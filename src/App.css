@@ -30,6 +30,10 @@ input:focus {
   color: white !important;
 }
 
+.mb-1 {
+  display: block;
+  margin-bottom: 3.5rem !important;
+}
 /* Nav */
 .nav-container {
   max-width: 1200px;
