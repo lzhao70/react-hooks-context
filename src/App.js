@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import NavBar from './Components/NavBar/NavBar';
@@ -11,101 +11,73 @@ import './App.css';
 import 'typeface-nunito';
 import axios from 'axios';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      users: [],
-      user: {},
-      isLoading: true,
-    };
-  }
+const App = () => {
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({});
+  const [isLoading, setLoading] = useState(true);
+  const [alert, setAlert] = useState(null);
 
-  async componentDidMount() {
-    let usersData = await axios.get('https://api.github.com/users');
+  useEffect(() => {
+    async function async() {
+      let usersData = await axios.get('https://api.github.com/users');
+      setUsers(usersData.data);
+      setLoading(false);
+    }
+    async();
+  }, [setUsers, setLoading]);
 
-    this.setState({
-      users: usersData.data,
-      isLoading: false,
-    });
-  }
-
-  getUser = async (userName) => {
-    this.setState({
-      isLoading: true,
-    });
-
+  const getUser = async (userName) => {
+    setLoading(true);
     let userData = await axios.get(`https://api.github.com/users/${userName}`);
-
-    this.setState({
-      user: userData.data,
-      isLoading: false,
-    });
-
-    console.log(this.state.user);
+    setUser(userData.data);
+    setLoading(false);
   };
 
-  searchUsers = async (txt) => {
-    this.setState({
-      isLoading: true,
-    });
-
+  const searchUsers = async (txt) => {
+    setLoading(true);
     let usersData = await axios.get(
       `https://api.github.com/search/users?q=${txt}`
     );
-
-    this.setState({
-      users: usersData.data.items,
-      isLoading: false,
-    });
+    setUsers(usersData.data.items);
+    setLoading(false);
   };
 
-  setAlert = (msg, classN) => {
-    this.setState({
-      alert: { msg: msg, classN: classN },
-    });
+  const setAlertMethod = (msg, classN) => {
+    setAlert({ msg: msg, classN: classN });
 
     setTimeout(() => {
-      this.setState({
-        alert: null,
-      });
+      setAlert(null);
     }, 5000);
   };
 
-  render() {
-    return (
-      <div>
-        <Router>
-          <NavBar title={'Github Finder'} />
-          <div className='container'>
-            <Alert alert={this.state.alert} />
-            <Switch>
-              <Route exact path='/'>
-                <Users
-                  searchUsers={this.searchUsers}
-                  users={this.state.users}
-                  isLoading={this.state.isLoading}
-                  setAlert={this.setAlert}
-                />
-              </Route>
-              <Route exact path='/about' component={About} />
-              <Route
-                exact
-                path='/users/:login'
-                render={(props) => (
-                  <UserDetails
-                    {...props}
-                    getUser={this.getUser}
-                    user={this.state.user}
-                  />
-                )}
+  return (
+    <div>
+      <Router>
+        <NavBar title={'Github Finder'} />
+        <div className='container'>
+          <Alert alert={alert} />
+          <Switch>
+            <Route exact path='/'>
+              <Users
+                searchUsers={searchUsers}
+                users={users}
+                isLoading={isLoading}
+                setAlert={setAlertMethod}
               />
-            </Switch>
-          </div>
-        </Router>
-      </div>
-    );
-  }
-}
+            </Route>
+            <Route exact path='/about' component={About} />
+            <Route
+              exact
+              path='/users/:login'
+              render={(props) => (
+                <UserDetails {...props} getUser={getUser} user={user} />
+              )}
+            />
+          </Switch>
+        </div>
+      </Router>
+    </div>
+  );
+};
 
 export default App;
