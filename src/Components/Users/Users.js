@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import User from './User';
 import Spinner from '../Spinner/Spinner';
-import Search from '../Search/Search';
+import GithubContext from '../../context/github/githubContext';
 
-const Users = (props) => {
-  return (
-    <div className='mb-1'>
-      <Search searchUsers={props.searchUsers} setAlert={props.setAlert} />
-      {props.isLoading ? (
-        <Spinner />
-      ) : (
-        <div>
-          <div className='user-card-container'>
-            {props.users.map((user) => (
-              <User user={user} />
-            ))}
-          </div>
+const Users = () => {
+  const githubContext = useContext(GithubContext);
+
+  if (githubContext.isLoading) {
+    return <Spinner className='mb-1' />;
+  } else {
+    return (
+      <div className='mb-1'>
+        <div className='user-card-container'>
+          {githubContext.users.map((user) => (
+            <User key={user.id} user={user} />
+          ))}
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default Users;
